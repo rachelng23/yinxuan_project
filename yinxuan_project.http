@@ -1,0 +1,6 @@
+@yinxuan_project_HostAddress = http://localhost:5089
+
+GET {{yinxuan_project_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

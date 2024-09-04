@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000000;
+        }
+
+        .wrapper {
+            --input-focus: #2d8cf0;
+            --font-color: #323232;
+            --font-color-sub: #666;
+            --bg-color: #fff;
+            --bg-color-alt: #666;
+            --main-color: #323232;
+            display: flex;
+            width: 100%;
+            max-width: 400px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .title {
+            margin: 20px 0;
+            font-size: 30px;
+            font-weight: 900;
+            text-align: center;
+            color: var(--main-color);
+        }
+
+        .input {
+            width: 280px;
+            height: 50px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--font-color);
+            padding: 5px 10px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        .input::placeholder {
+            color: var(--font-color-sub);
+            opacity: 0.8;
+        }
+
+        .input:focus {
+            border: 2px solid var(--input-focus);
+        }
+
+        .role-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .role-buttons label {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--font-color);
+        }
+
+        .btn {
+            width: 150px;
+            height: 50px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--font-color);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="card">
+            <div class="title">Register</div>
+            <input class="input" id="name" placeholder="Enter your name" type="text">
+            <input class="input" id="email" placeholder="Enter your email" type="email">
+            <input class="input" id="password" placeholder="Enter your password" type="password">
+
+            <div class="role-buttons">
+                <label><input type="radio" name="role" value="user" checked> User</label>
+                <label><input type="radio" name="role" value="admin"> Admin</label>
+            </div>
+
+            <button class="btn" onclick="register()">Register</button>
+        </div>
+    </div>
+
+    <script>
+        function register() {
+            var username = document.getElementById("name").value.trim();
+            var password = document.getElementById("password").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var role = document.querySelector('input[name="role"]:checked').value;
+
+            if (!username || !password || !email) {
+                alert("All fields are required.");
+                return;
+            }
+
+            var controllerURL = "http://localhost:5089/api/Authenticate/register";
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", controllerURL, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            var data = JSON.stringify({
+                "username": username,
+                "password": password,
+                "email": email,
+                "role": role
+            });
+
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        alert("Registration successful! You can now log in.");
+                        window.location.href = "login.html"; // Redirect to login page after successful registration
+                    } else {
+                        alert("Registration failed. Please try again.");
+                        console.error("Error during registration:", this.status, this.responseText);
+                    }
+                }
+            };
+
+            xhr.send(data);
+        }
+    </script>
+</body>
+
+</html>
